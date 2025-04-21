@@ -101,6 +101,54 @@ class TestHTMLNode(unittest.TestCase):
             new_nodes,
         )
 
+    def test_extract_image1(self):
+        matches = extract_markdown_images(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
+            )
+        self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
+
+    def test_extract_image2(self):
+        matches = extract_markdown_images(
+            "This is text with no image)"
+            )
+        self.assertListEqual([], matches)
+        
+    def test_extract_image3(self):
+        matches = extract_markdown_images(
+            "This is text with an ![](https://i.imgur.com/zjjcJKZ.png)"
+            )
+        self.assertListEqual([("", "https://i.imgur.com/zjjcJKZ.png")], matches)
+
+    def test_extract_image4(self):
+        matches = extract_markdown_images(
+            "This is text with an ![text]()"
+            )
+        self.assertListEqual([("text", "")], matches)
+
+    def test_extract_links1(self):
+        matches = extract_markdown_links(
+            "This is text with an image ![url](websiteisdmji)"
+            )
+        self.assertListEqual([], matches)
+
+    def test_extract_links2(self):
+        matches = extract_markdown_links(
+            "This is text with an image [alt text1](websiteisdmji url)"
+            )
+        self.assertListEqual([("alt text1","websiteisdmji url")], matches)
+
+    def test_extract_links3(self):
+        matches = extract_markdown_links(
+            "This is text with an image [](websiteisdmji)"
+            )
+        self.assertListEqual([("","websiteisdmji")], matches)
+
+    def test_extract_links4(self):
+        matches = extract_markdown_links(
+            "This is text with an image [asdasd]()"
+            )
+        self.assertListEqual([("asdasd","")], matches)
+
 
 if __name__ == "__main__":
     unittest.main()
