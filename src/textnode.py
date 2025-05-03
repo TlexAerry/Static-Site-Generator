@@ -1,12 +1,12 @@
 from enum import Enum
 from htmlnode import LeafNode
 class TextType(Enum):
-    NormalText = "normal"
-    BoldText = "bold"
-    ItalicText = "italic"
-    CodeText = "code"
-    Link = "link"
-    Image = "image"
+    TEXT = "text"
+    BOLD = "bold"
+    ITALIC = "italic"
+    CODE = "code"
+    LINK = "link"
+    IMAGE = "image"
 
 class TextNode():
     def __init__(self, text,type, url = None):
@@ -21,21 +21,21 @@ class TextNode():
         return text_same and type_same and url_same 
 
     def __repr__(self):
-        return f"TextNode({self.text}, {self.type.value}, {self.url})"
+        return f"TextNode({repr(self.text)}, {self.type}, {repr(self.url)})"
 
 def text_node_to_html_node(text_node):
     match text_node.type:
-        case TextType.NormalText:
+        case TextType.TEXT:
             return LeafNode(None, text_node.text)
-        case TextType.BoldText:
+        case TextType.BOLD:
             return LeafNode("b", text_node.text)
-        case TextType.ItalicText:
+        case TextType.ITALIC:
             return LeafNode("i", text_node.text)
-        case TextType.CodeText:
+        case TextType.CODE:
             return LeafNode("code", text_node.text)
-        case TextType.Link:
+        case TextType.LINK:
             return LeafNode("a", text_node.text, {"href":f"{text_node.url}"})
-        case TextType.Image:
+        case TextType.IMAGE:
             return LeafNode("img","", {"src":f"{text_node.url}","alt":f"{text_node.text}"})
         case _:
             raise ValueError(f"{text_node.type} text type is incorrect, please use one of the pre-defined values")
