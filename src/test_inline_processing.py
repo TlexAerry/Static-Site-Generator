@@ -3,6 +3,7 @@ from inline_processing import *
 from textnode import TextType
 
 class TestHTMLNode(unittest.TestCase):
+#~~~~~~~~~Initial Testing: 8 Test Cases
     def test_case1(self):
         node = TextNode("This is text with a **bolded phrase** in the middle", TextType.TEXT)
         expected_output = [
@@ -101,6 +102,8 @@ class TestHTMLNode(unittest.TestCase):
             new_nodes,
         )
 
+class TestExtractImagesandLinks(unittest.TestCase):
+#~~~~~~~~~Testing extracting links and images: 8 Test Cases
     def test_extract_image1(self):
         matches = extract_markdown_images(
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
@@ -149,7 +152,8 @@ class TestHTMLNode(unittest.TestCase):
             )
         self.assertListEqual([("asdasd","")], matches)
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NEW TESTING STARTS HERE FOR SPLITTING TEXT AND IMAGES
+class TestSplittingImagesandLinks(unittest.TestCase):
+#~~~~~~~~~Testing for splitting images and links: 9 Test Cases 
     def test_split_images(self):
         node = TextNode(
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
@@ -227,6 +231,98 @@ class TestHTMLNode(unittest.TestCase):
             ],
             new_nodes,
         )        
+
+    def test_split_no_images(self):
+        node = TextNode(
+            "This is text with no images and with text that follows",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with no images and with text that follows", TextType.TEXT),
+            ],
+            new_nodes,
+        )        
+
+    def test_split_no_links(self):
+        node = TextNode(
+            "This is text with no links and with text that follows",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with no links and with text that follows", TextType.TEXT),
+            ],
+            new_nodes,
+        )        
+
+    def test_mix_image_and_link(self):
+        node = TextNode(
+            "This is text with an image ![image](url) and a link [link](url) and with text that follows",
+            TextType.TEXT,
+        )
+
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with an image ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "url"),
+                TextNode(" and a link [link](url) and with text that follows", TextType.TEXT),
+            ],
+            new_nodes,
+        )  
+
+    def test_mix_link_and_image(self):
+        node = TextNode(
+            "This is text with an image ![image](url) and a link [link](url) and with text that follows",
+            TextType.TEXT,
+        )
+
+        new_nodes = split_nodes_link([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with an image ![image](url) and a link ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "url"),
+                TextNode(" and with text that follows", TextType.TEXT),
+            ],
+            new_nodes,
+        )  
+
+class TestTextToTextNodes(unittest.TestCase):
+#~~~~~~~~~Testing for text to text nodes: 3 Test Cases
+    def test_text_to_text_node1(self):
+        expected_list = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("text", TextType.BOLD),
+            TextNode(" with an ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word and a ", TextType.TEXT),
+            TextNode("code block", TextType.CODE),
+            TextNode(" and an ", TextType.TEXT),
+            TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode(" and a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+        ]
+        input = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        actual_list = text_to_text_nodes(input)
+        self.assertListEqual(expected_list, actual_list)
+
+    def test_text_to_text_node2(self):
+        expected_list = []
+        input = ""
+        actual_list = text_to_text_nodes(input)
+        self.assertListEqual(expected_list, actual_list)
+
+    def test_text_to_text_node3(self):
+        expected_list = [
+            TextNode("This is no bold text with no italic text and no code block", TextType.TEXT)
+            ]
+        input = "This is no bold text with no italic text and no code block"
+        actual_list = text_to_text_nodes(input)
+        self.assertListEqual(expected_list, actual_list)
+
 
 if __name__ == "__main__":
     unittest.main()

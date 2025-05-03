@@ -84,3 +84,19 @@ def split_nodes_link(old_nodes):
            return_list.append(TextNode(f"{extracted_text}", TextType.TEXT))   
         
     return return_list    
+
+def text_to_text_nodes(text):
+    text_node = TextNode(text, TextType.TEXT)
+    image_nodes = split_nodes_image([text_node])
+    link_nodes = split_nodes_link(image_nodes)
+    final_nodes = link_nodes
+    delimeters_and_types = [
+        ("**",TextType.BOLD),
+        ("_", TextType.ITALIC),
+        ("`", TextType.CODE),
+    ]
+    for delimeter, type in delimeters_and_types:
+        final_nodes = split_nodes_delimeter(final_nodes, delimeter, type)    
+
+    
+    return final_nodes

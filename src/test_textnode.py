@@ -1,7 +1,5 @@
 import unittest
-
 from textnode import TextNode, TextType,text_node_to_html_node
-
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
@@ -58,9 +56,6 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
         self.assertEqual(html_node.tag,"a")
         self.assertEqual(html_node.value, "this is a link")
         self.assertEqual(html_node.props, {"href":"www.website.com"})
-
-
-
 
 if __name__ == "__main__":
     unittest.main()
