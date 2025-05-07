@@ -134,11 +134,11 @@ def paragraph_to_html_node(block):
     text = block
     lines = text.split("\n")
     new_text = " ".join(lines)
-    #processes the  inline markdown
+    #processes the inline markdown
     children = text_to_children(new_text) 
     parent = ParentNode("p",children)
     return parent
-    
+
 def heading_to_html_node(block):
     number_of_hts = 0
     testing_text = block
