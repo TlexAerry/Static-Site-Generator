@@ -18,7 +18,9 @@ class HTMLNode():
     
     def __repr__(self):
         return f"HTMLNode({self.tag},{self.value},{self.children},{self.props})"
-    
+
+#   Ultimately, leaf nodes will function as the text
+#   within a parent object   
 class LeafNode(HTMLNode):
     def __init__(self,tag, value,props = None):
         super().__init__(tag, value, None, props)
@@ -41,7 +43,8 @@ class LeafNode(HTMLNode):
         for prop in self.props:
             props_html += f' {prop}="{self.props[prop]}"'
         return props_html
-    
+
+#   Used for the likes of Headings, paragraphs, lists,   
 class ParentNode(HTMLNode):
     def __init__(self,tag, children, props = None):
         super().__init__(tag, None, children, props)

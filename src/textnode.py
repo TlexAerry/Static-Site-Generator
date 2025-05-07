@@ -8,6 +8,7 @@ class TextType(Enum):
     LINK = "link"
     IMAGE = "image"
 
+#   TextNodes are used for inline markdown.
 class TextNode():
     def __init__(self, text,type, url = None):
         self.text = text
@@ -23,6 +24,9 @@ class TextNode():
     def __repr__(self):
         return f"TextNode({repr(self.text)}, {self.type}, {repr(self.url)})"
 
+#   This takes the inline markdown TextNodes,
+#   and formats it to a leaf node which will sit 
+#   as a child under a parent node
 def text_node_to_html_node(text_node):
     match text_node.type:
         case TextType.TEXT:

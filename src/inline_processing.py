@@ -1,7 +1,12 @@
 from textnode import TextNode, TextType
 import re
 
-
+#   This function will split a node or a series of nodes into a
+#   new list of nodes and each of those nodes dependent on what
+#   delimeter and is detected which determines what the text is 
+#   i.e. if ** is detected then it will create a text node for 
+#   some bold text and then two nodes, one for before the bold 
+#   text and one for after the bold text.
 def split_nodes_delimeter(old_nodes, delimeter, text_type):
     new_nodes = []
     for old_node in old_nodes:
@@ -21,14 +26,20 @@ def split_nodes_delimeter(old_nodes, delimeter, text_type):
                 new_nodes.append(TextNode(substrings[i],text_type))
     return new_nodes
 
+#   Helper function to identify markdown images within text
 def extract_markdown_images(text):
     matches = re.findall("!\\[(.*?)\\]\\((.*?)\\)", text)
-    return matches
+    return matches 
 
+#   Helper function to identify markdown links within text
 def extract_markdown_links(text):
     matches = re.findall("(?<!\\!)\\[(.*?)\\]\\((.*?)\\)", text)
     return matches
 
+#   This will take a list of nodes, and split them based on
+#   identified images using above defined helper functions.
+#   Then will return a list of TextNodes for the text before
+#   the image, the image, and the text after the image.  
 def split_nodes_image(old_nodes):
     return_list =[]
     for old_node in old_nodes:
@@ -57,6 +68,9 @@ def split_nodes_image(old_nodes):
         
     return return_list    
 
+
+#   See split_nodes_image function for this function, they 
+#   are equivalent but just use different helper functions. 
 def split_nodes_link(old_nodes):
     return_list =[]
     for old_node in old_nodes:
@@ -85,6 +99,11 @@ def split_nodes_link(old_nodes):
         
     return return_list    
 
+#   The jewel in the crown of this file. This takes a string, 
+#   turns it into a text node, then splits it based on any 
+#   images in that text, does the same for links. And then iterates
+#   through potential delimeters for other text types, and builds
+#   text nodes for that text. Will return a list of text nodes. 
 def text_to_text_nodes(text):
     text_node = TextNode(text, TextType.TEXT)
     image_nodes = split_nodes_image([text_node])
