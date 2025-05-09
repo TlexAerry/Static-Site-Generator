@@ -3,7 +3,8 @@ from markdown_extraction import *
 from generate_page_function import *
 import sys
 def main():
-    basepath = sys.argv[0]
+    basepath = sys.argv[1]
+    print(basepath)
     copy_to_dest("static","docs") 
     generate_pages_recursive("content","template.html", "docs",basepath)
 
