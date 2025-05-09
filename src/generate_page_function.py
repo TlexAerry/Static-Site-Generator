@@ -1,6 +1,7 @@
 from block_processing import *
 from markdown_extraction import *
 import os
+from delete_and_copy import *
 
 def generate_page(from_path, template_path, dest_path):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
@@ -23,3 +24,21 @@ def generate_page(from_path, template_path, dest_path):
 
     with open(dest_path,"w") as f:
         f.write(template_contents)
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    files = find_file_paths(dir_path_content)
+    pages = []
+    for file in files:
+        if os.path.isfile(file):
+            pages.append(file)
+    
+    for page in pages:
+        directory_old,file_name = os.path.split(page)
+        
+        directory_new = dest_dir_path + directory_old[7:]
+        
+        if not os.path.exists(directory_new):
+             os.makedirs(directory_new)
+
+        generate_page(page,template_path, directory_new+"/"+file_name[:-2]+"html")
+    
