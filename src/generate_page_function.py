@@ -49,5 +49,5 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path,base
             suffix = "css"
         else:
             suffix = "html"
-        generate_page(page,template_path, directory_new+"/"+".".join([page.split(".")[0],suffix]),basepath)
+        generate_page(page,template_path, directory_new+"/"+file_name[:-2]+suffix,basepath)
     
